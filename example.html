@@ -105,16 +105,132 @@
         .copy-btn:hover {
             background-color: #2980b9;
         }
+
+        /* Add styles for icons container */
+        .icons-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            transition: transform 0.2s;
+        }
+
+        .icon-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .icon-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Dark theme styles */
+        body.dark-theme {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+
+        body.dark-theme h1,
+        body.dark-theme h2,
+        body.dark-theme h3 {
+            color: #ffffff;
+        }
+
+        body.dark-theme .container {
+            background-color: #2d2d2d;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-theme .icon-btn {
+            color: #ffffff;
+        }
+
+        body.dark-theme pre,
+        body.dark-theme code {
+            background-color: #2a2a2a;
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .feature {
+            border-left-color: #5dade2;
+        }
+
+        body.dark-theme button {
+            background-color: #2980b9;
+            color: #ffffff;
+        }
+
+        body.dark-theme button:hover {
+            background-color: #3498db;
+        }
+
+        body.dark-theme table th {
+            background-color: #2d2d2d;
+            color: #ffffff;
+            border-color: #404040;
+        }
+
+        body.dark-theme table td {
+            border-color: #404040;
+        }
+
+        body.dark-theme tr:nth-child(even) {
+            background-color: #2a2a2a;
+        }
+
+        body.dark-theme tr:nth-child(odd) {
+            background-color: #252525;
+        }
+
+        body.dark-theme .copy-btn {
+            background-color: #2980b9;
+            color: #ffffff;
+        }
+
+        body.dark-theme .copy-btn:hover {
+            background-color: #3498db;
+        }
     </style>
 </head>
 
 <body>
+    <!-- Icons container -->
+    <div class="icons-container">
+        <button class="icon-btn" id="theme-toggle" title="切换主题">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+        </button>
+        <a href="https://github.com/hillmis/wdiget.js" class="icon-btn" title="GitHub仓库" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <path
+                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                </path>
+            </svg>
+        </a>
+    </div>
+
     <h1>多功能挂件介绍</h1>
 
     <div class="container">
         <h2>什么是多功能挂件？</h2>
         <p>多功能挂件（MultiWidget）是一个可拖拽、可自定义的浮动工具组件，它允许您在网页中嵌入各种实用功能，如音乐播放器、视频播放器等，并支持添加您自己的自定义组件。</p>
-
+        <p>源码：https://github.com/hillmis/wdiget.js</p>
         <h3>主要特点：</h3>
         <div class="feature">
             <strong>可拖拽定位：</strong> 可以自由拖动挂件到网页的任何位置。
@@ -205,16 +321,11 @@ MultiWidget.init({
 
     <div class="container">
         <h2>示例演示</h2>
-        <p>点击本页面挂件按钮即可预览</p>
+        <p>点击本页面左上角挂件按钮即可预览</p>
         <p>点击下面的按钮显示/隐藏挂件</p>
         <button id="toggleWidget">显示挂件</button>
     </div>
-    <div class="container">
-        <h2>widget.js源码地址</h2>
-        <div class="code-container">
-            <pre></pre>
-        </div>
-    </div>
+
 
     <!-- 引入挂件脚本 -->
     <script src="widget.js"></script>
@@ -225,8 +336,8 @@ MultiWidget.init({
             defaultWidget: 'music',  // 默认显示的组件
             minimized: true,         // 默认最小化
             position: {              // 默认位置
-                right: '30px',
-                bottom: '20px'
+                left: '30px',
+                top: '20px'
             }
         });
 
@@ -244,6 +355,52 @@ MultiWidget.init({
                 toggleBtn.textContent = '隐藏挂件';
             }
             isVisible = !isVisible;
+        });
+
+        // 主题切换功能
+        const themeToggle = document.getElementById('theme-toggle');
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+        // 检查本地存储中的主题设置
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+            themeToggle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>`;
+        }
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+
+            // 更新图标
+            if (document.body.classList.contains('dark-theme')) {
+                localStorage.setItem('theme', 'dark');
+                themeToggle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>`;
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeToggle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>`;
+            }
         });
     </script>
 </body>
