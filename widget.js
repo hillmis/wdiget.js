@@ -1,9 +1,8 @@
-
 /**
-* 多功能挂件库
-* 一个可拖拽、可自定义的浮动挂件
-* @version 1.0.0
-*/
+ * 多功能挂件库
+ * 一个可拖拽、可自定义的浮动挂件
+ * @version 1.0.0
+ */
 (function (window) {
     'use strict';
 
@@ -95,497 +94,497 @@
             // 创建样式
             const style = document.createElement('style');
             style.textContent = `
-                                /* 面板基础样式 */
-                                .widget-panel {
-                                    position: fixed;
-                                    bottom: 20px;
-                                    right: 20px;
-                                    width: 300px;
-                                    background: rgba(40, 40, 50, 0.95);
-                                    border-radius: 12px;
-                                    backdrop-filter: blur(10px);
-                                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-                                    z-index: 9999;
-                                    transition: all 0.3s ease;
-                                    overflow: hidden;
-                                    height: auto;
-                                    max-height: calc(100vh - 40px);
-                                    display: flex;
-                                    flex-direction: column;
-                                    resize: both;
-                                    --accent-color: #3498db;
-                                }
-                
-                                /* 主题变量 */
-                                .widget-panel[data-theme="dark"] {
-                                    --bg-color: rgba(40, 40, 50, 0.95);
-                                    --header-bg: rgba(30, 30, 40, 0.9);
-                                    --text-color: #fff;
-                                    --accent-color: #3498db;
-                                    --border-color: rgba(255, 255, 255, 0.1);
-                                }
-                
-                                .widget-panel[data-theme="light"] {
-                                    --bg-color: rgba(245, 245, 250, 0.95);
-                                    --header-bg: rgba(230, 230, 235, 0.9);
-                                    --text-color: #333;
-                                    --accent-color: #3498db;
-                                    --border-color: rgba(0, 0, 0, 0.1);
-                                    background: var(--bg-color);
-                                }
-                
-                                /* 最小化状态 */
-                                .widget-panel.minimized {
-                                    width: 40px !important;
-                                    height: 40px !important;
-                                    border-radius: 8px;
-                                    cursor: move;
-                                    resize: none;
-                                    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
-                                    background: var(--accent-color);
-                                    transition: all 0.2s ease;
-                                }
-                
-                                .widget-panel.minimized:hover {
-                                    transform: scale(1.05);
-                                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-                                }
-                
-                                /* 固定状态 */
-                                .widget-panel.pinned {
-                                    box-shadow: 0 0 0 2px var(--accent-color);
-                                }
-                
-                                .panel-btn.active {
-                                    color: var(--accent-color);
-                                    background: rgba(255, 255, 255, 0.1);
-                                }
-                
-                                /* 尺寸调整控件 */
-                                .resize-handle {
-                                    position: absolute;
-                                    width: 10px;
-                                    height: 10px;
-                                    background: var(--accent-color);
-                                    border-radius: 50%;
-                                    z-index: 10000;
-                                    transition: opacity 0.3s;
-                                    opacity: 0;
-                                }
-                
-                                .widget-panel.show-resize-handles:hover .resize-handle {
-                                    opacity: 0.7;
-                                }
-                
-                                .resize-handle:hover {
-                                    opacity: 1;
-                                    transform: scale(1.2);
-                                }
-                
-                                .resize-handle-se {
-                                    bottom: 5px;
-                                    right: 5px;
-                                    cursor: nwse-resize;
-                                }
-                
-                                .resize-handle-sw {
-                                    bottom: 5px;
-                                    left: 5px;
-                                    cursor: nesw-resize;
-                                }
-                
-                                .resize-handle-ne {
-                                    top: 5px;
-                                    right: 5px;
-                                    cursor: nesw-resize;
-                                }
-                
-                                .resize-handle-nw {
-                                    top: 5px;
-                                    left: 5px;
-                                    cursor: nwse-resize;
-                                }
-                
-                                /* 最小化图标 */
-                                .minimize-icon {
-                                    display: none;
-                                    position: absolute;
-                                    top: 0;
-                                    left: 0;
-                                    width: 100%;
-                                    height: 100%;
-                                    justify-content: center;
-                                    align-items: center;
-                                    color: white;
-                                    font-size: 20px;
-                                    cursor: pointer;
-                                }
-                
-                                .widget-panel.minimized .minimize-icon {
-                                    display: flex;
-                                }
-                
-                                /* 面板头部 */
-                                .panel-header {
-                                    display: flex;
-                                    align-items: center;
-                                    padding: 10px 15px;
-                                    background: var(--header-bg);
-                                    cursor: move;
-                                    user-select: none;
-                                    color: var(--text-color);
-                                }
-                
-                                .widget-panel.minimized .panel-header,
-                                .widget-panel.minimized .widget-nav,
-                                .widget-panel.minimized .widget-container,
-                                .widget-panel.minimized .settings-panel,
-                                .widget-panel.minimized .add-widget-panel {
-                                    display: none;
-                                }
-                
-                                .panel-title {
-                                    margin: 0;
-                                    font-size: 14px;
-                                    font-weight: 500;
-                                    flex: 1;
-                                    color: var(--text-color);
-                                }
-                
-                                /* 控制按钮 */
-                                .panel-controls {
-                                    display: flex;
-                                    gap: 5px;
-                                }
-                
-                                .panel-btn {
-                                    background: none;
-                                    border: none;
-                                    color: var(--text-color);
-                                    font-size: 12px;
-                                    cursor: pointer;
-                                    padding: 5px;
-                                    border-radius: 4px;
-                                    transition: 0.2s;
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                }
-                
-                                .panel-btn:hover {
-                                    background: rgba(255, 255, 255, 0.1);
-                                }
-                
-                                /* 组件导航 */
-                                .widget-nav {
-                                    display: flex;
-                                    flex-wrap: wrap;
-                                    gap: 5px;
-                                    padding: 10px;
-                                    border-bottom: 1px solid var(--border-color);
-                                    background: var(--bg-color);
-                                }
-                
-                                .widget-nav.edit-mode .widget-nav-btn {
-                                    cursor: move;
-                                    position: relative;
-                                    padding-right: 25px;
-                                }
-                
-                                .widget-nav-btn {
-                                    background: rgba(255, 255, 255, 0.05);
-                                    border: none;
-                                    color: var(--text-color);
-                                    padding: 6px 12px;
-                                    border-radius: 4px;
-                                    cursor: pointer;
-                                    font-size: 12px;
-                                    transition: 0.2s;
-                                    display: flex;
-                                    align-items: center;
-                                    gap: 5px;
-                                }
-                
-                                .widget-nav-btn:hover {
-                                    background: rgba(255, 255, 255, 0.1);
-                                }
-                
-                                .widget-nav-btn.active {
-                                    background: var(--accent-color);
-                                    color: white;
-                                }
-                
-                                .widget-nav-btn .remove-btn {
-                                    display: none;
-                                    position: absolute;
-                                    right: 5px;
-                                    top: 50%;
-                                    transform: translateY(-50%);
-                                    color: rgba(255, 255, 255, 0.7);
-                                    cursor: pointer;
-                                }
-                
-                                .widget-nav.edit-mode .widget-nav-btn .remove-btn {
-                                    display: block;
-                                }
-                
-                                .widget-nav-btn .remove-btn:hover {
-                                    color: #ff4757;
-                                }
-                
-                                /* 组件容器 */
-                                .widget-container {
-                                    flex: 1;
-                                    position: relative;
-                                    overflow: hidden;
-                                    background: var(--bg-color);
-                                    min-height: 100px;
-                                    transition: height 0.3s;
-                                }
-                
-                                .widget-container.expanded {
-                                    height: 300px;
-                                }
-                
-                                .widget-container.auto-height {
-                                    height: auto;
-                                }
-                
-                                .widget-content {
-                                    position: absolute;
-                                    top: 0;
-                                    left: 0;
-                                    width: 100%;
-                                    height: 100%;
-                                    display: none;
-                                    background: var(--bg-color);
-                                }
-                
-                                .widget-content.active {
-                                    display: block;
-                                }
-                
-                                .widget-frame {
-                                    width: 100%;
-                                    height: 100%;
-                                    position: relative;
-                                }
-                
-                                /* 加载指示器 */
-                                .loading-indicator {
-                                    position: absolute;
-                                    top: 0;
-                                    left: 0;
-                                    width: 100%;
-                                    height: 100%;
-                                    display: flex;
-                                    flex-direction: column;
-                                    justify-content: center;
-                                    align-items: center;
-                                    background: var(--bg-color);
-                                    color: var(--text-color);
-                                    gap: 10px;
-                                    z-index: 1;
-                                }
-                
-                                .loading-indicator i {
-                                    font-size: 24px;
-                                    color: var(--accent-color);
-                                }
-                
-                                .error-state {
-                                    display: flex;
-                                    flex-direction: column;
-                                    align-items: center;
-                                    gap: 10px;
-                                    color: #ff6b6b;
-                                }
-                
-                                .error-state i {
-                                    font-size: 24px;
-                                    color: #ff6b6b;
-                                }
-                
-                                .error-state button {
-                                    background: var(--accent-color);
-                                    color: white;
-                                    border: none;
-                                    padding: 5px 10px;
-                                    border-radius: 4px;
-                                    cursor: pointer;
-                                }
-                
-                                /* 设置面板 */
-                                .settings-panel {
-                                    position: absolute;
-                                    top: 0;
-                                    left: 0;
-                                    width: 100%;
-                                    height: 100%;
-                                    background: var(--bg-color);
-                                    z-index: 100;
-                                    display: none;
-                                    flex-direction: column;
-                                    padding: 15px;
-                                    box-sizing: border-box;
-                                    overflow-y: auto;
-                                }
-                
-                                .settings-panel.active {
-                                    display: flex;
-                                }
-                
-                                .settings-header {
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: space-between;
-                                    margin-bottom: 15px;
-                                    border-bottom: 1px solid var(--border-color);
-                                    padding-bottom: 8px;
-                                }
-                
-                                .settings-header h4 {
-                                    margin: 0;
-                                    color: var(--text-color);
-                                    font-size: 14px;
-                                    font-weight: 500;
-                                }
-                
-                                .settings-close-btn {
-                                    background: none;
-                                    border: none;
-                                    color: var(--text-color);
-                                    font-size: 16px;
-                                    cursor: pointer;
-                                    padding: 5px;
-                                    border-radius: 4px;
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    transition: 0.2s;
-                                }
-                
-                                .settings-close-btn:hover {
-                                    background: rgba(255, 255, 255, 0.1);
-                                    color: var(--accent-color);
-                                }
-                
-                                .settings-section {
-                                    margin-bottom: 15px;
-                                }
-                
-                                .settings-section h4 {
-                                    margin: 0 0 10px 0;
-                                    color: var(--text-color);
-                                    font-size: 14px;
-                                    font-weight: 500;
-                                    border-bottom: 1px solid var(--border-color);
-                                    padding-bottom: 5px;
-                                }
-                
-                                .settings-item {
-                                    display: flex;
-                                    align-items: center;
-                                    margin-bottom: 10px;
-                                    color: var(--text-color);
-                                }
-                
-                                .settings-item label {
-                                    flex: 1;
-                                    font-size: 13px;
-                                }
-                
-                                /* 添加组件面板 */
-                                .add-widget-panel {
-                                    position: absolute;
-                                    top: 0;
-                                    left: 0;
-                                    width: 100%;
-                                    height: 100%;
-                                    background: var(--bg-color);
-                                    z-index: 100;
-                                    display: none;
-                                    flex-direction: column;
-                                    padding: 15px;
-                                    box-sizing: border-box;
-                                }
-                
-                                .add-widget-panel.active {
-                                    display: flex;
-                                }
-                
-                                .add-widget-panel h4 {
-                                    margin: 0 0 15px 0;
-                                    color: var(--text-color);
-                                    font-size: 14px;
-                                    font-weight: 500;
-                                    border-bottom: 1px solid var(--border-color);
-                                    padding-bottom: 5px;
-                                }
-                
-                                .add-widget-form {
-                                    display: flex;
-                                    flex-direction: column;
-                                    gap: 10px;
-                                }
-                
-                                .form-group {
-                                    display: flex;
-                                    flex-direction: column;
-                                    gap: 5px;
-                                }
-                
-                                .form-group label {
-                                    font-size: 13px;
-                                    color: var(--text-color);
-                                }
-                
-                                .form-group input,
-                                .form-group select {
-                                    padding: 8px;
-                                    border-radius: 4px;
-                                    border: 1px solid var(--border-color);
-                                    background: rgba(255, 255, 255, 0.05);
-                                    color: var(--text-color);
-                                }
-                
-                                .form-actions {
-                                    display: flex;
-                                    gap: 10px;
-                                    margin-top: 10px;
-                                    justify-content: flex-end;
-                                }
-                
-                                .btn {
-                                    padding: 8px 12px;
-                                    border-radius: 4px;
-                                    border: none;
-                                    cursor: pointer;
-                                    font-size: 13px;
-                                    transition: 0.2s;
-                                }
-                
-                                .btn-primary {
-                                    background: var(--accent-color);
-                                    color: white;
-                                }
-                
-                                .btn-secondary {
-                                    background: rgba(255, 255, 255, 0.1);
-                                    color: var(--text-color);
-                                }
-                
-                                .btn:hover {
-                                    opacity: 0.9;
-                                }
-                
-                                .error-message {
-                                    color: #ff6b6b;
-                                    font-size: 12px;
-                                    margin-top: 5px;
-                                    display: none;
-                                }
-                            `;
+                /* 面板基础样式 */
+                .widget-panel {
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    width: 300px;
+                    background: rgba(40, 40, 50, 0.95);
+                    border-radius: 12px;
+                    backdrop-filter: blur(10px);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+                    z-index: 9999;
+                    transition: all 0.3s ease;
+                    overflow: hidden;
+                    height: auto;
+                    max-height: calc(100vh - 40px);
+                    display: flex;
+                    flex-direction: column;
+                    resize: both;
+                    --accent-color: #3498db;
+                }
+
+                /* 主题变量 */
+                .widget-panel[data-theme="dark"] {
+                    --bg-color: rgba(40, 40, 50, 0.95);
+                    --header-bg: rgba(30, 30, 40, 0.9);
+                    --text-color: #fff;
+                    --accent-color: #3498db;
+                    --border-color: rgba(255, 255, 255, 0.1);
+                }
+
+                .widget-panel[data-theme="light"] {
+                    --bg-color: rgba(245, 245, 250, 0.95);
+                    --header-bg: rgba(230, 230, 235, 0.9);
+                    --text-color: #333;
+                    --accent-color: #3498db;
+                    --border-color: rgba(0, 0, 0, 0.1);
+                    background: var(--bg-color);
+                }
+
+                /* 最小化状态 */
+                .widget-panel.minimized {
+                    width: 40px !important;
+                    height: 40px !important;
+                    border-radius: 8px;
+                    cursor: move;
+                    resize: none;
+                    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+                    background: var(--accent-color);
+                    transition: all 0.2s ease;
+                }
+
+                .widget-panel.minimized:hover {
+                    transform: scale(1.05);
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+                }
+
+                /* 固定状态 */
+                .widget-panel.pinned {
+                    box-shadow: 0 0 0 2px var(--accent-color);
+                }
+
+                .panel-btn.active {
+                    color: var(--accent-color);
+                    background: rgba(255, 255, 255, 0.1);
+                }
+
+                /* 尺寸调整控件 */
+                .resize-handle {
+                    position: absolute;
+                    width: 10px;
+                    height: 10px;
+                    background: var(--accent-color);
+                    border-radius: 50%;
+                    z-index: 10000;
+                    transition: opacity 0.3s;
+                    opacity: 0;
+                }
+
+                .widget-panel.show-resize-handles:hover .resize-handle {
+                    opacity: 0.7;
+                }
+
+                .resize-handle:hover {
+                    opacity: 1;
+                    transform: scale(1.2);
+                }
+
+                .resize-handle-se {
+                    bottom: 5px;
+                    right: 5px;
+                    cursor: nwse-resize;
+                }
+
+                .resize-handle-sw {
+                    bottom: 5px;
+                    left: 5px;
+                    cursor: nesw-resize;
+                }
+
+                .resize-handle-ne {
+                    top: 5px;
+                    right: 5px;
+                    cursor: nesw-resize;
+                }
+
+                .resize-handle-nw {
+                    top: 5px;
+                    left: 5px;
+                    cursor: nwse-resize;
+                }
+
+                /* 最小化图标 */
+                .minimize-icon {
+                    display: none;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    justify-content: center;
+                    align-items: center;
+                    color: white;
+                    font-size: 20px;
+                    cursor: pointer;
+                }
+
+                .widget-panel.minimized .minimize-icon {
+                    display: flex;
+                }
+
+                /* 面板头部 */
+                .panel-header {
+                    display: flex;
+                    align-items: center;
+                    padding: 10px 15px;
+                    background: var(--header-bg);
+                    cursor: move;
+                    user-select: none;
+                    color: var(--text-color);
+                }
+
+                .widget-panel.minimized .panel-header,
+                .widget-panel.minimized .widget-nav,
+                .widget-panel.minimized .widget-container,
+                .widget-panel.minimized .settings-panel,
+                .widget-panel.minimized .add-widget-panel {
+                    display: none;
+                }
+
+                .panel-title {
+                    margin: 0;
+                    font-size: 14px;
+                    font-weight: 500;
+                    flex: 1;
+                    color: var(--text-color);
+                }
+
+                /* 控制按钮 */
+                .panel-controls {
+                    display: flex;
+                    gap: 5px;
+                }
+
+                .panel-btn {
+                    background: none;
+                    border: none;
+                    color: var(--text-color);
+                    font-size: 12px;
+                    cursor: pointer;
+                    padding: 5px;
+                    border-radius: 4px;
+                    transition: 0.2s;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .panel-btn:hover {
+                    background: rgba(255, 255, 255, 0.1);
+                }
+
+                /* 组件导航 */
+                .widget-nav {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 5px;
+                    padding: 10px;
+                    border-bottom: 1px solid var(--border-color);
+                    background: var(--bg-color);
+                }
+
+                .widget-nav.edit-mode .widget-nav-btn {
+                    cursor: move;
+                    position: relative;
+                    padding-right: 25px;
+                }
+
+                .widget-nav-btn {
+                    background: rgba(255, 255, 255, 0.05);
+                    border: none;
+                    color: var(--text-color);
+                    padding: 6px 12px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-size: 12px;
+                    transition: 0.2s;
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                }
+
+                .widget-nav-btn:hover {
+                    background: rgba(255, 255, 255, 0.1);
+                }
+
+                .widget-nav-btn.active {
+                    background: var(--accent-color);
+                    color: white;
+                }
+
+                .widget-nav-btn .remove-btn {
+                    display: none;
+                    position: absolute;
+                    right: 5px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    color: rgba(255, 255, 255, 0.7);
+                    cursor: pointer;
+                }
+
+                .widget-nav.edit-mode .widget-nav-btn .remove-btn {
+                    display: block;
+                }
+
+                .widget-nav-btn .remove-btn:hover {
+                    color: #ff4757;
+                }
+
+                /* 组件容器 */
+                .widget-container {
+                    flex: 1;
+                    position: relative;
+                    overflow: hidden;
+                    background: var(--bg-color);
+                    min-height: 100px;
+                    transition: height 0.3s;
+                }
+
+                .widget-container.expanded {
+                    height: 300px;
+                }
+
+                .widget-container.auto-height {
+                    height: auto;
+                }
+
+                .widget-content {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    display: none;
+                    background: var(--bg-color);
+                }
+
+                .widget-content.active {
+                    display: block;
+                }
+
+                .widget-frame {
+                    width: 100%;
+                    height: 100%;
+                    position: relative;
+                }
+
+                /* 加载指示器 */
+                .loading-indicator {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    background: var(--bg-color);
+                    color: var(--text-color);
+                    gap: 10px;
+                    z-index: 1;
+                }
+
+                .loading-indicator i {
+                    font-size: 24px;
+                    color: var(--accent-color);
+                }
+
+                .error-state {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 10px;
+                    color: #ff6b6b;
+                }
+
+                .error-state i {
+                    font-size: 24px;
+                    color: #ff6b6b;
+                }
+
+                .error-state button {
+                    background: var(--accent-color);
+                    color: white;
+                    border: none;
+                    padding: 5px 10px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                }
+
+                /* 设置面板 */
+                .settings-panel {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: var(--bg-color);
+                    z-index: 100;
+                    display: none;
+                    flex-direction: column;
+                    padding: 15px;
+                    box-sizing: border-box;
+                    overflow-y: auto;
+                }
+
+                .settings-panel.active {
+                    display: flex;
+                }
+
+                .settings-header {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    margin-bottom: 15px;
+                    border-bottom: 1px solid var(--border-color);
+                    padding-bottom: 8px;
+                }
+
+                .settings-header h4 {
+                    margin: 0;
+                    color: var(--text-color);
+                    font-size: 14px;
+                    font-weight: 500;
+                }
+
+                .settings-close-btn {
+                    background: none;
+                    border: none;
+                    color: var(--text-color);
+                    font-size: 16px;
+                    cursor: pointer;
+                    padding: 5px;
+                    border-radius: 4px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: 0.2s;
+                }
+
+                .settings-close-btn:hover {
+                    background: rgba(255, 255, 255, 0.1);
+                    color: var(--accent-color);
+                }
+
+                .settings-section {
+                    margin-bottom: 15px;
+                }
+
+                .settings-section h4 {
+                    margin: 0 0 10px 0;
+                    color: var(--text-color);
+                    font-size: 14px;
+                    font-weight: 500;
+                    border-bottom: 1px solid var(--border-color);
+                    padding-bottom: 5px;
+                }
+
+                .settings-item {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 10px;
+                    color: var(--text-color);
+                }
+
+                .settings-item label {
+                    flex: 1;
+                    font-size: 13px;
+                }
+
+                /* 添加组件面板 */
+                .add-widget-panel {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: var(--bg-color);
+                    z-index: 100;
+                    display: none;
+                    flex-direction: column;
+                    padding: 15px;
+                    box-sizing: border-box;
+                }
+
+                .add-widget-panel.active {
+                    display: flex;
+                }
+
+                .add-widget-panel h4 {
+                    margin: 0 0 15px 0;
+                    color: var(--text-color);
+                    font-size: 14px;
+                    font-weight: 500;
+                    border-bottom: 1px solid var(--border-color);
+                    padding-bottom: 5px;
+                }
+
+                .add-widget-form {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                }
+
+                .form-group {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 5px;
+                }
+
+                .form-group label {
+                    font-size: 13px;
+                    color: var(--text-color);
+                }
+
+                .form-group input,
+                .form-group select {
+                    padding: 8px;
+                    border-radius: 4px;
+                    border: 1px solid var(--border-color);
+                    background: rgba(255, 255, 255, 0.05);
+                    color: var(--text-color);
+                }
+
+                .form-actions {
+                    display: flex;
+                    gap: 10px;
+                    margin-top: 10px;
+                    justify-content: flex-end;
+                }
+
+                .btn {
+                    padding: 8px 12px;
+                    border-radius: 4px;
+                    border: none;
+                    cursor: pointer;
+                    font-size: 13px;
+                    transition: 0.2s;
+                }
+
+                .btn-primary {
+                    background: var(--accent-color);
+                    color: white;
+                }
+
+                .btn-secondary {
+                    background: rgba(255, 255, 255, 0.1);
+                    color: var(--text-color);
+                }
+
+                .btn:hover {
+                    opacity: 0.9;
+                }
+
+                .error-message {
+                    color: #ff6b6b;
+                    font-size: 12px;
+                    margin-top: 5px;
+                    display: none;
+                }
+            `;
             document.head.appendChild(style);
 
             // 创建挂件面板
@@ -594,155 +593,155 @@
             panel.id = 'widgetPanel';
             panel.dataset.theme = this.settings.theme;
             panel.innerHTML = `
-                                
-                                
-                                    
-                                
-                
-                                
-                                
-                                    多功能挂件
-                                    
-                                        
-                                            
-                                        
-                                        
-                                            
-                                        
-                                        
-                                            
-                                        
-                                        
-                                            
-                                        
-                                        
-                                            
-                                        
-                                        
-                                            
-                                        
-                                    
-                                
-                
-                                
-                                
-                                
-                                
-                                
-                
-                                
-                                
-                                    
-                                        设置
-                                        
-                                            
-                                        
-                                    
-                                    
-                                        基本设置
-                                        
-                                            透明度
-                                            
-                                        
-                                        
-                                            主题
-                                            
-                                                深色
-                                                浅色
-                                                跟随系统
-                                            
-                                        
-                                    
-                                    
-                                        行为设置
-                                        
-                                            自动播放
-                                            
-                                        
-                                        
-                                            记住位置
-                                            
-                                        
-                                        
-                                            记住尺寸
-                                            
-                                        
-                                        
-                                            自动高度
-                                            
-                                        
-                                        
-                                            显示尺寸调整手柄
-                                            
-                                        
-                                    
-                                
-                
-                                
-                                
-                                    
-                                        
-                                        
-                                            
-                                        
-                                    
-                                    
-                                        
-                                            组件名称
-                                            
-                                        
-                                        
-                                            图标
-                                            
-                                                🌐 网页
-                                                🎬 视频
-                                                🎵 音乐
-                                                📊 图表
-                                                📅 日历
-                                                📝 笔记
-                                                ⏰ 时钟
-                                                🧮 计算器
-                                                📍 地图
-                                                📰 资讯
-                                                ⚙️ 工具
-                                                🎮 游戏
-                                            
-                                        
-                                        
-                                            URL地址
-                                            
-                                        
-                                        
-                                        
-                                            取消
-                                            保存
-                                        
-                                    
-                                
-                
-                                
-                                
-                
-                                
-                                
-                                    
-                                        
-                                            
-                                                
-                                                加载中...
-                                            
-                                        
-                                    
-                                    
-                                        
-                                            
-                                                
-                                                加载中...
-                                            
-                                        
-                                    
-                                
-                            `;
+                <!-- 最小化时显示的图标 -->
+                <div class="minimize-icon">
+                    <i class="fas fa-th-large"></i>
+                </div>
+
+                <!-- 面板头部 -->
+                <div class="panel-header" id="panelHeader">
+                    <h3 class="panel-title">多功能挂件</h3>
+                    <div class="panel-controls">
+                        <button class="panel-btn" id="btnManageWidgets" title="管理组件">
+                            <i class="fas fa-tasks"></i>
+                        </button>
+                        <button class="panel-btn" id="btnAddWidget" title="添加">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button class="panel-btn" id="btnRefresh" title="刷新">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <button class="panel-btn" id="btnSettings" title="设置">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                        <button class="panel-btn" id="btnPin" title="固定">
+                            <i class="fas fa-thumbtack"></i>
+                        </button>
+                        <button class="panel-btn" id="btnMinimize" title="最小化">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 尺寸调整手柄 -->
+                <div class="resize-handle resize-handle-se" id="resizeHandleSE"></div>
+                <div class="resize-handle resize-handle-sw" id="resizeHandleSW"></div>
+                <div class="resize-handle resize-handle-ne" id="resizeHandleNE"></div>
+                <div class="resize-handle resize-handle-nw" id="resizeHandleNW"></div>
+
+                <!-- 设置面板 -->
+                <div class="settings-panel" id="settingsPanel">
+                    <div class="settings-header">
+                        <h4>设置</h4>
+                        <button class="settings-close-btn" id="settingsCloseBtn" title="关闭">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="settings-section">
+                        <h4>基本设置</h4>
+                        <div class="settings-item">
+                            <label>透明度</label>
+                            <input type="range" id="settingOpacity" min="50" max="100" value="95">
+                        </div>
+                        <div class="settings-item">
+                            <label>主题</label>
+                            <select id="settingTheme">
+                                <option value="dark">深色</option>
+                                <option value="light">浅色</option>
+                                <option value="auto">跟随系统</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <h4>行为设置</h4>
+                        <div class="settings-item">
+                            <label>自动播放</label>
+                            <input type="checkbox" id="settingAutoplay" checked>
+                        </div>
+                        <div class="settings-item">
+                            <label>记住位置</label>
+                            <input type="checkbox" id="settingRememberPos" checked>
+                        </div>
+                        <div class="settings-item">
+                            <label>记住尺寸</label>
+                            <input type="checkbox" id="settingRememberSize" checked>
+                        </div>
+                        <div class="settings-item">
+                            <label>自动高度</label>
+                            <input type="checkbox" id="settingAutoHeight" checked>
+                        </div>
+                        <div class="settings-item">
+                            <label>显示尺寸调整手柄</label>
+                            <input type="checkbox" id="settingShowResizeHandles">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 添加组件面板 -->
+                <div class="add-widget-panel" id="addWidgetPanel">
+                    <div class="settings-header">
+                        <h4></h4>
+                        <button class="settings-close-btn" id="addWidgetCloseBtn" title="关闭">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="add-widget-form">
+                        <div class="form-group">
+                            <label>组件名称</label>
+                            <input type="text" id="widgetName" placeholder="输入组件名称">
+                        </div>
+                        <div class="form-group">
+                            <label>图标</label>
+                            <select id="widgetIcon">
+                                <option value="fas fa-globe">🌐 网页</option>
+                                <option value="fas fa-video">🎬 视频</option>
+                                <option value="fas fa-music">🎵 音乐</option>
+                                <option value="fas fa-chart-bar">📊 图表</option>
+                                <option value="fas fa-calendar">📅 日历</option>
+                                <option value="fas fa-sticky-note">📝 笔记</option>
+                                <option value="fas fa-clock">⏰ 时钟</option>
+                                <option value="fas fa-calculator">🧮 计算器</option>
+                                <option value="fas fa-map-marker-alt">📍 地图</option>
+                                <option value="fas fa-rss">📰 资讯</option>
+                                <option value="fas fa-cog">⚙️ 工具</option>
+                                <option value="fas fa-gamepad">🎮 游戏</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>URL地址</label>
+                            <input type="text" id="widgetUrl" placeholder="输入网页URL">
+                        </div>
+                        <div class="error-message" id="addWidgetError"></div>
+                        <div class="form-actions">
+                            <button class="btn btn-secondary" id="cancelAddBtn">取消</button>
+                            <button class="btn btn-primary" id="saveWidgetBtn">保存</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 组件导航 -->
+                <div class="widget-nav"></div>
+
+                <!-- 组件容器 -->
+                <div class="widget-container expanded">
+                    <div class="widget-content active" id="musicWidget">
+                        <div class="widget-frame">
+                            <div class="loading-indicator">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <span>加载中...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="widget-content" id="videoWidget">
+                        <div class="widget-frame">
+                            <div class="loading-indicator">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <span>加载中...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
 
             document.body.appendChild(panel);
             this.widgetPanel = panel;
@@ -926,9 +925,9 @@
                 }
 
                 btn.innerHTML = `
-                                     ${widget.name}
-                                    ${!widget.isBuiltIn ? '' : ''}
-                                `;
+                    <i class="${widget.icon}"></i> ${widget.name}
+                    ${!widget.isBuiltIn ? '<span class="remove-btn"><i class="fas fa-times"></i></span>' : ''}
+                `;
 
                 // 点击切换组件
                 btn.addEventListener('click', (e) => {
@@ -996,13 +995,13 @@
                     contentEl.className = 'widget-content';
                     contentEl.id = `${widgetId}Widget`;
                     contentEl.innerHTML = `
-                                        
-                                            
-                                                
-                                                加载中...
-                                            
-                                        
-                                    `;
+                        <div class="widget-frame">
+                            <div class="loading-indicator">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <span>加载中...</span>
+                            </div>
+                        </div>
+                    `;
                 }
 
                 // 设置当前活动组件
@@ -1084,21 +1083,21 @@
             // 添加错误处理
             iframe.addEventListener('error', () => {
                 loadingIndicator.innerHTML = `
-                                    
-                                        
-                                        加载失败
-                                        重试
-                                    
-                                `;
+                    <div class="error-state">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>加载失败</span>
+                        <button id="retryBtn-${widgetId}">重试</button>
+                    </div>
+                `;
 
                 // 添加重试按钮事件
                 const retryBtn = loadingIndicator.querySelector(`#retryBtn-${widgetId}`);
                 if (retryBtn) {
                     retryBtn.addEventListener('click', () => {
                         loadingIndicator.innerHTML = `
-                                            
-                                            加载中...
-                                        `;
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <span>加载中...</span>
+                        `;
                         iframe.src = widget.url;
                     });
                 }
