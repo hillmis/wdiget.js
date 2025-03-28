@@ -729,7 +729,7 @@
                     <div class="github-link">
                         <h4>关于项目</h4>
                         <a id="githubLinkBtn" class="github-btn" href="#" target="_blank">
-                            <i class="fab fa-github"></i> GitHub
+                            <i class="fab fa-github"></i>
                         </a>
                     </div>
                 </div>
