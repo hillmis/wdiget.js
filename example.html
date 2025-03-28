@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多功能挂件介绍</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #2c3e50;
+        }
+
+        .container {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        pre {
+            background-color: #f1f1f1;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        code {
+            font-family: Consolas, monospace;
+            background-color: #f1f1f1;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .feature {
+            margin-bottom: 15px;
+            padding-left: 20px;
+            border-left: 3px solid #3498db;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .code-container {
+            position: relative;
+            margin-top: 10px;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .copy-btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>多功能挂件介绍</h1>
+
+    <div class="container">
+        <h2>什么是多功能挂件？</h2>
+        <p>多功能挂件（MultiWidget）是一个可拖拽、可自定义的浮动工具组件，它允许您在网页中嵌入各种实用功能，如音乐播放器、视频播放器等，并支持添加您自己的自定义组件。</p>
+
+        <h3>主要特点：</h3>
+        <div class="feature">
+            <strong>可拖拽定位：</strong> 可以自由拖动挂件到网页的任何位置。
+        </div>
+        <div class="feature">
+            <strong>可调整大小：</strong> 支持自定义调整组件大小，适应不同需求。
+        </div>
+        <div class="feature">
+            <strong>多组件切换：</strong> 默认内置音乐、视频等组件，可随时切换使用。
+        </div>
+        <div class="feature">
+            <strong>自定义组件：</strong> 支持添加自定义URL作为新组件。
+        </div>
+        <div class="feature">
+            <strong>记忆功能：</strong> 可以记住位置、大小和上次使用的组件。
+        </div>
+        <div class="feature">
+            <strong>最小化/固定：</strong> 支持最小化和固定功能，不干扰正常浏览。
+        </div>
+        <div class="feature">
+            <strong>主题切换：</strong> 支持深色/浅色主题切换。
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>使用方法</h2>
+
+        <h3>基本使用</h3>
+        <ol>
+            <li>引入挂件脚本：<code>&lt;script src="widget.js"&gt;&lt;/script&gt;</code></li>
+            <li>初始化挂件：
+                <pre>
+// 初始化
+MultiWidget.init();
+    </pre>
+                <pre>
+// 可选配置参数
+MultiWidget.init({
+    defaultWidget: 'music',  // 默认显示的组件
+    minimized: true,         // 默认最小化
+    position: {              // 默认位置
+        right: '20px',
+        bottom: '20px'
+    }
+});
+</pre>
+            </li>
+        </ol>
+
+        <h3>配置选项</h3>
+        <table>
+            <tr>
+                <th>选项</th>
+                <th>类型</th>
+                <th>默认值</th>
+                <th>说明</th>
+            </tr>
+            <tr>
+                <td>defaultWidget</td>
+                <td>String</td>
+                <td>'music'</td>
+                <td>默认显示的组件ID</td>
+            </tr>
+            <tr>
+                <td>minimized</td>
+                <td>Boolean</td>
+                <td>true</td>
+                <td>初始是否为最小化状态</td>
+            </tr>
+            <tr>
+                <td>position</td>
+                <td>Object</td>
+                <td>{right:'20px', bottom:'20px'}</td>
+                <td>初始位置设置</td>
+            </tr>
+        </table>
+
+        <h3>内置接口说明</h3>
+        <ul>
+            <li><strong>显示挂件：</strong> MultiWidget.show();</li>
+            <li><strong>隐藏挂件：</strong> MultiWidget.hide();</li>
+            <li><strong>最小化：</strong> MultiWidget.toggleMinimize();</li>
+            <li><strong>固定：</strong> MultiWidget.togglePin();</li>
+
+
+        </ul>
+    </div>
+
+    <div class="container">
+        <h2>示例演示</h2>
+        <p>点击本页面挂件按钮即可预览</p>
+        <p>点击下面的按钮显示/隐藏挂件</p>
+        <button id="toggleWidget">显示挂件</button>
+    </div>
+    <div class="container">
+        <h2>widget.js源码地址</h2>
+        <div class="code-container">
+            <pre></pre>
+        </div>
+    </div>
+
+    <!-- 引入挂件脚本 -->
+    <script src="widget.js"></script>
+
+    <script>
+        // 初始化挂件
+        MultiWidget.init({
+            defaultWidget: 'music',  // 默认显示的组件
+            minimized: true,         // 默认最小化
+            position: {              // 默认位置
+                right: '30px',
+                bottom: '20px'
+            }
+        });
+
+
+        // 切换按钮功能
+        const toggleBtn = document.getElementById('toggleWidget');
+        let isVisible = true;
+
+        toggleBtn.addEventListener('click', function () {
+            if (isVisible) {
+                MultiWidget.hide();
+                toggleBtn.textContent = '显示挂件';
+            } else {
+                MultiWidget.show();
+                toggleBtn.textContent = '隐藏挂件';
+            }
+            isVisible = !isVisible;
+        });
+    </script>
+</body>
+
+</html>
