@@ -17,6 +17,7 @@
                 defaultWidget: 'music',
                 position: { right: '20px', bottom: '20px' },
                 minimized: true,
+                githubUrl: 'https://github.com/hillmis/wdiget.js',
                 ...options
             };
 
@@ -44,7 +45,8 @@
                 rememberSize: true,
                 autoHeight: true,
                 showResizeHandles: false,
-                theme: 'dark'
+                theme: 'dark',
+                githubUrl: 'https://github.com/hillmis/wdiget.js'
             };
 
             // 组件配置
@@ -494,6 +496,54 @@
                     font-size: 13px;
                 }
 
+                /* GitHub 链接样式 */
+                .github-link {
+                    display: flex;
+                    justify-content: center;
+                    margin-top: 15px;
+                    padding-top: 15px;
+                    border-top: 1px solid var(--border-color);
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 10px;
+                }
+
+                .github-link h4 {
+                    color: var(--text-color);
+                    font-size: 14px;
+                    font-weight: 500;
+                    margin: 0 0 5px 0;
+                    align-self: flex-start;
+                }
+
+                .github-btn {
+                    background: rgba(255, 255, 255, 0.1);
+                    border: none;
+                    color: var(--text-color);
+                    padding: 8px 12px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-size: 13px;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    transition: 0.2s;
+                    text-decoration: none;
+                }
+                
+                .github-btn:hover {
+                    background: var(--accent-color);
+                    color: white;
+                }
+                
+            
+                
+                .github-actions {
+                    display: flex;
+                    gap: 10px;
+                    justify-content: flex-end;
+                }
+
                 /* 添加组件面板 */
                 .add-widget-panel {
                     position: absolute;
@@ -674,6 +724,13 @@
                             <label>显示尺寸调整手柄</label>
                             <input type="checkbox" id="settingShowResizeHandles">
                         </div>
+                    </div>
+                    <!-- GitHub 链接部分 -->
+                    <div class="github-link">
+                        <h4>关于项目</h4>
+                        <a id="githubLinkBtn" class="github-btn" href="#" target="_blank">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
                     </div>
                 </div>
 
@@ -1927,6 +1984,46 @@
 
                 this.saveSettings();
             });
+
+            // GitHub 链接设置
+            const githubLinkBtn = settingsPanel.querySelector('#githubLinkBtn');
+
+            if (githubLinkBtn) {
+                // 如果在配置中提供了GitHub链接，优先使用配置中的
+                if (this.config.githubUrl && !this.settings.githubUrl) {
+                    this.settings.githubUrl = this.config.githubUrl;
+                    this.saveSettings();
+                }
+
+                // 设置链接地址
+                githubLinkBtn.href = this.settings.githubUrl || '#';
+
+                // 更新按钮文本
+                this.updateGithubButtonText();
+
+                // 添加点击事件，在新标签页中打开
+                githubLinkBtn.addEventListener('click', (e) => {
+                    // 如果链接无效，阻止默认行为
+                    if (!this.settings.githubUrl || this.settings.githubUrl === '#') {
+                        e.preventDefault();
+                        alert('GitHub 项目链接未设置，请在初始化时提供 githubUrl 参数');
+                    }
+                });
+            }
+        }
+
+        // 更新GitHub按钮文本
+        updateGithubButtonText() {
+            const githubLinkBtn = this.widgetPanel.querySelector('#githubLinkBtn');
+            if (!githubLinkBtn) return;
+
+            if (!this.settings.githubUrl || this.settings.githubUrl === '#') {
+                githubLinkBtn.innerHTML = '<i class="fab fa-github"></i> GitHub 项目';
+                githubLinkBtn.style.backgroundColor = 'rgba(255, 100, 100, 0.2)';
+            } else {
+                githubLinkBtn.innerHTML = '<i class="fab fa-github"></i> GitHub 项目';
+                githubLinkBtn.style.backgroundColor = '';
+            }
         }
 
         // 加载设置
@@ -1939,6 +2036,11 @@
                 } catch (error) {
                     console.error('解析设置数据失败:', error);
                 }
+            }
+
+            // 确保 GitHub URL 正确设置
+            if (!this.settings.githubUrl && this.config.githubUrl) {
+                this.settings.githubUrl = this.config.githubUrl;
             }
 
             // 应用设置
@@ -1990,6 +2092,9 @@
                 const btnPin = this.widgetPanel.querySelector('#btnPin');
                 if (btnPin) btnPin.classList.add('active');
             }
+
+            // 更新 GitHub 按钮状态
+            this.updateGithubButtonText();
         }
 
         // 保存设置
