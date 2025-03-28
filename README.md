@@ -86,7 +86,7 @@ const widgetId = MultiWidget.addWidget(
 
 ## 示例演示
 临时示例网站：https://widgetjs.rth2.xyz/
-HTML 中可通过按钮控制挂件显隐：
+
 
 ```html
 <button id="toggleWidget">显示/隐藏挂件</button>
